@@ -1,0 +1,12 @@
+name: 'Branch syncer'
+description: 'Triggers workflows on branches after master merge'
+inputs:
+  repo-token:
+    description: 'expects secrets.GITHUB_TOKEN'
+    required: true
+  target-workflow:
+    description: 'workflow that should be launched on other branches'
+    required: true
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
