@@ -169,21 +169,13 @@ const github = __webpack_require__(469);
 /**
  * This script is launched after master was pushed. We should wait until VERSION is available in pypi, then 
  * trigger re-runs of all live branches. Those re-runs should bump versions in the other branches.
- * 
- * First, we'll need a mapping of repos to packages. It's assumed that each has a top-level VERSION file.
  */
-const REPO_PACKAGE_VERSIONS = {
-  'bh-infra': ['aws_tools', 'datacore', 'aws_organization_setup'],
-  'bh-ai': ['aicore', 'biocore', 'reccy'],
-  'bh-core': ['core']
-};
 
 async function run() {
   try {
     const token = core.getInput('repo-token');
     const targetWorkflow = core.getInput('target-workflow');
 
-    //core.info(JSON.stringify(github.context));
     const repoName = github.context.payload.repository.full_name;
     core.info(`Running under ${repoName}`);
     const [owner, repo] = repoName.split('/');
@@ -193,10 +185,9 @@ async function run() {
       owner,
       repo,
     });
-    //core.info(JSON.stringify(branches));
 
     branches.forEach(async b => {
-      if (b.name == 'foo') {
+      if (b.name !== 'master') {
         core.info(`Running ${targetWorkflow} for ${b.name}`);
         try {
           const resp = await octokit.actions.createWorkflowDispatch({
