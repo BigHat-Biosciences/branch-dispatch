@@ -32,7 +32,8 @@ async function run() {
             ref: b.name,
           });
         } catch (error) {
-          core.setFailed(JSON.stringify(error));
+          core.info(error.stack)
+          core.setFailed(error.message);
         }
       }
     })
